@@ -4,9 +4,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-  name: views.network.upbound.io
+  name: views.dns.infoblox.upbound.io
 spec:
-  group: network.upbound.io
+  group: dns.infoblox.upbound.io
   names:
     categories:
     - crossplane
@@ -67,16 +67,17 @@ spec:
               forProvider:
                 properties:
                   comment:
-                    description: A description of the network view.
+                    description: Comment for the DNS View object; maximum 256 characters.
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of the network container
-                      to be added/updated, as a map in JSON format
+                    description: The Extensible attributes of the DNS view to be added/updated,
+                      as a map in JSON format
                     type: string
                   name:
-                    description: Specifies the desired name of the network view as
-                      shown in the NIOS appliance. The name has the same requirements
-                      as the corresponding parameter in WAPI.
+                    description: The name of the DNS View to be specified
+                    type: string
+                  networkView:
+                    description: The name of the Network View in which DNS View exists.
                     type: string
                 type: object
               initProvider:
@@ -92,16 +93,17 @@ spec:
                   like an autoscaler.
                 properties:
                   comment:
-                    description: A description of the network view.
+                    description: Comment for the DNS View object; maximum 256 characters.
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of the network container
-                      to be added/updated, as a map in JSON format
+                    description: The Extensible attributes of the DNS view to be added/updated,
+                      as a map in JSON format
                     type: string
                   name:
-                    description: Specifies the desired name of the network view as
-                      shown in the NIOS appliance. The name has the same requirements
-                      as the corresponding parameter in WAPI.
+                    description: The name of the DNS View to be specified
+                    type: string
+                  networkView:
+                    description: The name of the Network View in which DNS View exists.
                     type: string
                 type: object
               managementPolicies:
@@ -275,18 +277,19 @@ spec:
               atProvider:
                 properties:
                   comment:
-                    description: A description of the network view.
+                    description: Comment for the DNS View object; maximum 256 characters.
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of the network container
-                      to be added/updated, as a map in JSON format
+                    description: The Extensible attributes of the DNS view to be added/updated,
+                      as a map in JSON format
                     type: string
                   id:
                     type: string
                   name:
-                    description: Specifies the desired name of the network view as
-                      shown in the NIOS appliance. The name has the same requirements
-                      as the corresponding parameter in WAPI.
+                    description: The name of the DNS View to be specified
+                    type: string
+                  networkView:
+                    description: The name of the Network View in which DNS View exists.
                     type: string
                 type: object
               conditions:

@@ -4,9 +4,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-  name: records.mx.upbound.io
+  name: records.a.infoblox.upbound.io
 spec:
-  group: mx.upbound.io
+  group: a.infoblox.upbound.io
   names:
     categories:
     - crossplane
@@ -66,27 +66,37 @@ spec:
                 type: string
               forProvider:
                 properties:
+                  cidr:
+                    description: Network to allocate an IP address from, when the
+                      'ip_addr' field is empty (dynamic allocation). The address is
+                      in CIDR format. For static allocation, leave this field empty.
+                    type: string
                   comment:
-                    description: Description of the MX-Record.
+                    description: Description of the A-record.
                     type: string
                   dnsView:
-                    description: DNS view which the zone does exist within
+                    description: DNS view which the zone does exist within.
                     type: string
                   extAttrs:
-                    description: Extensible attributes of the MX-record to be added/updated,
-                      as a map in JSON format.
+                    description: Extensible attributes of the A-record to be added/updated,
+                      as a map in JSON format
                     type: string
                   fqdn:
-                    description: FQDN for the MX-record.
+                    description: FQDN for the A-record.
                     type: string
-                  mailExchanger:
-                    description: A record used to specify mail server.
+                  ipAddr:
+                    description: IP address to associate with the A-record. For static
+                      allocation, set the field with a valid IP address. For dynamic
+                      allocation, leave this field empty and set 'cidr' and 'network_view'
+                      fields.
                     type: string
-                  preference:
-                    description: Configures the preference (0-65535) for this MX-record.
-                    type: number
+                  networkView:
+                    description: Network view to use when allocating an IP address
+                      from a network dynamically. For static allocation, leave this
+                      field empty.
+                    type: string
                   ttl:
-                    description: TTL value for the MX-record.
+                    description: TTL value for the A-record.
                     type: number
                 type: object
               initProvider:
@@ -101,27 +111,37 @@ spec:
                   for example because of an external controller is managing them,
                   like an autoscaler.
                 properties:
+                  cidr:
+                    description: Network to allocate an IP address from, when the
+                      'ip_addr' field is empty (dynamic allocation). The address is
+                      in CIDR format. For static allocation, leave this field empty.
+                    type: string
                   comment:
-                    description: Description of the MX-Record.
+                    description: Description of the A-record.
                     type: string
                   dnsView:
-                    description: DNS view which the zone does exist within
+                    description: DNS view which the zone does exist within.
                     type: string
                   extAttrs:
-                    description: Extensible attributes of the MX-record to be added/updated,
-                      as a map in JSON format.
+                    description: Extensible attributes of the A-record to be added/updated,
+                      as a map in JSON format
                     type: string
                   fqdn:
-                    description: FQDN for the MX-record.
+                    description: FQDN for the A-record.
                     type: string
-                  mailExchanger:
-                    description: A record used to specify mail server.
+                  ipAddr:
+                    description: IP address to associate with the A-record. For static
+                      allocation, set the field with a valid IP address. For dynamic
+                      allocation, leave this field empty and set 'cidr' and 'network_view'
+                      fields.
                     type: string
-                  preference:
-                    description: Configures the preference (0-65535) for this MX-record.
-                    type: number
+                  networkView:
+                    description: Network view to use when allocating an IP address
+                      from a network dynamically. For static allocation, leave this
+                      field empty.
+                    type: string
                   ttl:
-                    description: TTL value for the MX-record.
+                    description: TTL value for the A-record.
                     type: number
                 type: object
               managementPolicies:
@@ -289,42 +309,44 @@ spec:
               rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
                 || ''Update'' in self.managementPolicies) || has(self.forProvider.fqdn)
                 || (has(self.initProvider) && has(self.initProvider.fqdn))'
-            - message: spec.forProvider.mailExchanger is a required parameter
-              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.mailExchanger)
-                || (has(self.initProvider) && has(self.initProvider.mailExchanger))'
-            - message: spec.forProvider.preference is a required parameter
-              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.preference)
-                || (has(self.initProvider) && has(self.initProvider.preference))'
           status:
             description: RecordStatus defines the observed state of Record.
             properties:
               atProvider:
                 properties:
+                  cidr:
+                    description: Network to allocate an IP address from, when the
+                      'ip_addr' field is empty (dynamic allocation). The address is
+                      in CIDR format. For static allocation, leave this field empty.
+                    type: string
                   comment:
-                    description: Description of the MX-Record.
+                    description: Description of the A-record.
                     type: string
                   dnsView:
-                    description: DNS view which the zone does exist within
+                    description: DNS view which the zone does exist within.
                     type: string
                   extAttrs:
-                    description: Extensible attributes of the MX-record to be added/updated,
-                      as a map in JSON format.
+                    description: Extensible attributes of the A-record to be added/updated,
+                      as a map in JSON format
                     type: string
                   fqdn:
-                    description: FQDN for the MX-record.
+                    description: FQDN for the A-record.
                     type: string
                   id:
                     type: string
-                  mailExchanger:
-                    description: A record used to specify mail server.
+                  ipAddr:
+                    description: IP address to associate with the A-record. For static
+                      allocation, set the field with a valid IP address. For dynamic
+                      allocation, leave this field empty and set 'cidr' and 'network_view'
+                      fields.
                     type: string
-                  preference:
-                    description: Configures the preference (0-65535) for this MX-record.
-                    type: number
+                  networkView:
+                    description: Network view to use when allocating an IP address
+                      from a network dynamically. For static allocation, leave this
+                      field empty.
+                    type: string
                   ttl:
-                    description: TTL value for the MX-record.
+                    description: TTL value for the A-record.
                     type: number
                 type: object
               conditions:

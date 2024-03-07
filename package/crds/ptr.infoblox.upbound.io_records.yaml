@@ -4,18 +4,18 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-  name: views.dns.upbound.io
+  name: records.ptr.infoblox.upbound.io
 spec:
-  group: dns.upbound.io
+  group: ptr.infoblox.upbound.io
   names:
     categories:
     - crossplane
     - managed
     - infoblox
-    kind: View
-    listKind: ViewList
-    plural: views
-    singular: view
+    kind: Record
+    listKind: RecordList
+    plural: records
+    singular: record
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,7 +34,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: View is the Schema for the Views API. <no value>
+        description: Record is the Schema for the Records API. <no value>
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -49,7 +49,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: ViewSpec defines the desired state of View
+            description: RecordSpec defines the desired state of Record
             properties:
               deletionPolicy:
                 default: Delete
@@ -66,19 +66,38 @@ spec:
                 type: string
               forProvider:
                 properties:
+                  cidr:
+                    description: The network address in cidr format under which record
+                      has to be created.
+                    type: string
                   comment:
-                    description: Comment for the DNS View object; maximum 256 characters.
+                    description: A description about PTR record.
+                    type: string
+                  dnsView:
+                    description: Dns View under which the zone has been created.
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of the DNS view to be added/updated,
+                    description: The Extensible attributes of PTR record to be added/updated,
                       as a map in JSON format
                     type: string
-                  name:
-                    description: The name of the DNS View to be specified
+                  ipAddr:
+                    description: IPv4/IPv6 address for record creation. Set the field
+                      with valid IP for static allocation. If to be dynamically allocated
+                      set cidr field
                     type: string
                   networkView:
-                    description: The name of the Network View in which DNS View exists.
+                    description: Network view name of NIOS server.
                     type: string
+                  ptrdname:
+                    description: The domain name in FQDN to which the record should
+                      point to.
+                    type: string
+                  recordName:
+                    description: The name of the DNS PTR record in FQDN format
+                    type: string
+                  ttl:
+                    description: TTL attribute value for the record.
+                    type: number
                 type: object
               initProvider:
                 description: THIS IS A BETA FIELD. It will be honored unless the Management
@@ -92,19 +111,38 @@ spec:
                   for example because of an external controller is managing them,
                   like an autoscaler.
                 properties:
+                  cidr:
+                    description: The network address in cidr format under which record
+                      has to be created.
+                    type: string
                   comment:
-                    description: Comment for the DNS View object; maximum 256 characters.
+                    description: A description about PTR record.
+                    type: string
+                  dnsView:
+                    description: Dns View under which the zone has been created.
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of the DNS view to be added/updated,
+                    description: The Extensible attributes of PTR record to be added/updated,
                       as a map in JSON format
                     type: string
-                  name:
-                    description: The name of the DNS View to be specified
+                  ipAddr:
+                    description: IPv4/IPv6 address for record creation. Set the field
+                      with valid IP for static allocation. If to be dynamically allocated
+                      set cidr field
                     type: string
                   networkView:
-                    description: The name of the Network View in which DNS View exists.
+                    description: Network view name of NIOS server.
                     type: string
+                  ptrdname:
+                    description: The domain name in FQDN to which the record should
+                      point to.
+                    type: string
+                  recordName:
+                    description: The name of the DNS PTR record in FQDN format
+                    type: string
+                  ttl:
+                    description: TTL attribute value for the record.
+                    type: number
                 type: object
               managementPolicies:
                 default:
@@ -267,30 +305,49 @@ spec:
             - forProvider
             type: object
             x-kubernetes-validations:
-            - message: spec.forProvider.name is a required parameter
+            - message: spec.forProvider.ptrdname is a required parameter
               rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.name)
-                || (has(self.initProvider) && has(self.initProvider.name))'
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.ptrdname)
+                || (has(self.initProvider) && has(self.initProvider.ptrdname))'
           status:
-            description: ViewStatus defines the observed state of View.
+            description: RecordStatus defines the observed state of Record.
             properties:
               atProvider:
                 properties:
+                  cidr:
+                    description: The network address in cidr format under which record
+                      has to be created.
+                    type: string
                   comment:
-                    description: Comment for the DNS View object; maximum 256 characters.
+                    description: A description about PTR record.
+                    type: string
+                  dnsView:
+                    description: Dns View under which the zone has been created.
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of the DNS view to be added/updated,
+                    description: The Extensible attributes of PTR record to be added/updated,
                       as a map in JSON format
                     type: string
                   id:
                     type: string
-                  name:
-                    description: The name of the DNS View to be specified
+                  ipAddr:
+                    description: IPv4/IPv6 address for record creation. Set the field
+                      with valid IP for static allocation. If to be dynamically allocated
+                      set cidr field
                     type: string
                   networkView:
-                    description: The name of the Network View in which DNS View exists.
+                    description: Network view name of NIOS server.
                     type: string
+                  ptrdname:
+                    description: The domain name in FQDN to which the record should
+                      point to.
+                    type: string
+                  recordName:
+                    description: The name of the DNS PTR record in FQDN format
+                    type: string
+                  ttl:
+                    description: TTL attribute value for the record.
+                    type: number
                 type: object
               conditions:
                 description: Conditions of the resource.

@@ -4,9 +4,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-  name: records.ptr.upbound.io
+  name: records.mx.infoblox.upbound.io
 spec:
-  group: ptr.upbound.io
+  group: mx.infoblox.upbound.io
   names:
     categories:
     - crossplane
@@ -66,37 +66,27 @@ spec:
                 type: string
               forProvider:
                 properties:
-                  cidr:
-                    description: The network address in cidr format under which record
-                      has to be created.
-                    type: string
                   comment:
-                    description: A description about PTR record.
+                    description: Description of the MX-Record.
                     type: string
                   dnsView:
-                    description: Dns View under which the zone has been created.
+                    description: DNS view which the zone does exist within
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of PTR record to be added/updated,
-                      as a map in JSON format
+                    description: Extensible attributes of the MX-record to be added/updated,
+                      as a map in JSON format.
                     type: string
-                  ipAddr:
-                    description: IPv4/IPv6 address for record creation. Set the field
-                      with valid IP for static allocation. If to be dynamically allocated
-                      set cidr field
+                  fqdn:
+                    description: FQDN for the MX-record.
                     type: string
-                  networkView:
-                    description: Network view name of NIOS server.
+                  mailExchanger:
+                    description: A record used to specify mail server.
                     type: string
-                  ptrdname:
-                    description: The domain name in FQDN to which the record should
-                      point to.
-                    type: string
-                  recordName:
-                    description: The name of the DNS PTR record in FQDN format
-                    type: string
+                  preference:
+                    description: Configures the preference (0-65535) for this MX-record.
+                    type: number
                   ttl:
-                    description: TTL attribute value for the record.
+                    description: TTL value for the MX-record.
                     type: number
                 type: object
               initProvider:
@@ -111,37 +101,27 @@ spec:
                   for example because of an external controller is managing them,
                   like an autoscaler.
                 properties:
-                  cidr:
-                    description: The network address in cidr format under which record
-                      has to be created.
-                    type: string
                   comment:
-                    description: A description about PTR record.
+                    description: Description of the MX-Record.
                     type: string
                   dnsView:
-                    description: Dns View under which the zone has been created.
+                    description: DNS view which the zone does exist within
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of PTR record to be added/updated,
-                      as a map in JSON format
+                    description: Extensible attributes of the MX-record to be added/updated,
+                      as a map in JSON format.
                     type: string
-                  ipAddr:
-                    description: IPv4/IPv6 address for record creation. Set the field
-                      with valid IP for static allocation. If to be dynamically allocated
-                      set cidr field
+                  fqdn:
+                    description: FQDN for the MX-record.
                     type: string
-                  networkView:
-                    description: Network view name of NIOS server.
+                  mailExchanger:
+                    description: A record used to specify mail server.
                     type: string
-                  ptrdname:
-                    description: The domain name in FQDN to which the record should
-                      point to.
-                    type: string
-                  recordName:
-                    description: The name of the DNS PTR record in FQDN format
-                    type: string
+                  preference:
+                    description: Configures the preference (0-65535) for this MX-record.
+                    type: number
                   ttl:
-                    description: TTL attribute value for the record.
+                    description: TTL value for the MX-record.
                     type: number
                 type: object
               managementPolicies:
@@ -305,48 +285,46 @@ spec:
             - forProvider
             type: object
             x-kubernetes-validations:
-            - message: spec.forProvider.ptrdname is a required parameter
+            - message: spec.forProvider.fqdn is a required parameter
               rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.ptrdname)
-                || (has(self.initProvider) && has(self.initProvider.ptrdname))'
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.fqdn)
+                || (has(self.initProvider) && has(self.initProvider.fqdn))'
+            - message: spec.forProvider.mailExchanger is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.mailExchanger)
+                || (has(self.initProvider) && has(self.initProvider.mailExchanger))'
+            - message: spec.forProvider.preference is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.preference)
+                || (has(self.initProvider) && has(self.initProvider.preference))'
           status:
             description: RecordStatus defines the observed state of Record.
             properties:
               atProvider:
                 properties:
-                  cidr:
-                    description: The network address in cidr format under which record
-                      has to be created.
-                    type: string
                   comment:
-                    description: A description about PTR record.
+                    description: Description of the MX-Record.
                     type: string
                   dnsView:
-                    description: Dns View under which the zone has been created.
+                    description: DNS view which the zone does exist within
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of PTR record to be added/updated,
-                      as a map in JSON format
+                    description: Extensible attributes of the MX-record to be added/updated,
+                      as a map in JSON format.
+                    type: string
+                  fqdn:
+                    description: FQDN for the MX-record.
                     type: string
                   id:
                     type: string
-                  ipAddr:
-                    description: IPv4/IPv6 address for record creation. Set the field
-                      with valid IP for static allocation. If to be dynamically allocated
-                      set cidr field
+                  mailExchanger:
+                    description: A record used to specify mail server.
                     type: string
-                  networkView:
-                    description: Network view name of NIOS server.
-                    type: string
-                  ptrdname:
-                    description: The domain name in FQDN to which the record should
-                      point to.
-                    type: string
-                  recordName:
-                    description: The name of the DNS PTR record in FQDN format
-                    type: string
+                  preference:
+                    description: Configures the preference (0-65535) for this MX-record.
+                    type: number
                   ttl:
-                    description: TTL attribute value for the record.
+                    description: TTL value for the MX-record.
                     type: number
                 type: object
               conditions:

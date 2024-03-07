@@ -4,18 +4,18 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-  name: networks.ipv4.upbound.io
+  name: networkcontainers.ipv6.infoblox.upbound.io
 spec:
-  group: ipv4.upbound.io
+  group: ipv6.infoblox.upbound.io
   names:
     categories:
     - crossplane
     - managed
     - infoblox
-    kind: Network
-    listKind: NetworkList
-    plural: networks
-    singular: network
+    kind: NetworkContainer
+    listKind: NetworkContainerList
+    plural: networkcontainers
+    singular: networkcontainer
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,7 +34,8 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Network is the Schema for the Networks API. <no value>
+        description: NetworkContainer is the Schema for the NetworkContainers API.
+          <no value>
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -49,7 +50,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: NetworkSpec defines the desired state of Network
+            description: NetworkContainerSpec defines the desired state of NetworkContainer
             properties:
               deletionPolicy:
                 default: Delete
@@ -68,36 +69,26 @@ spec:
                 properties:
                   allocatePrefixLen:
                     description: Set the parameter's value > 0 to allocate next available
-                      network with corresponding prefix length from the network container
-                      defined by 'parent_cidr'
+                      network container with corresponding prefix length from the
+                      network container defined by 'parent_cidr'
                     type: number
                   cidr:
-                    description: The network block in cidr format.
+                    description: The network container's address, in CIDR format.
                     type: string
                   comment:
-                    description: A string describing the network
+                    description: A description of the network container.
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of the Network
-                    type: string
-                  gateway:
-                    description: Gateway's IP address of the network. By default,
-                      the first IP address is set as gateway address; if the value
-                      is 'none' then the network has no gateway.
+                    description: The Extensible attributes of the network container
+                      to be added/updated, as a map in JSON format
                     type: string
                   networkView:
-                    description: Network view name available in NIOS Server.
+                    description: The name of network view for the network container.
                     type: string
                   parentCidr:
-                    description: The parent network container block in cidr format
+                    description: The parent network container block in CIDR format
                       to allocate from.
                     type: string
-                  reserveIp:
-                    description: The number of IP's you want to reserve in IPv4 Network.
-                    type: number
-                  reserveIpv6:
-                    description: The number of IP's you want to reserve in IPv6 Network
-                    type: number
                 type: object
               initProvider:
                 description: THIS IS A BETA FIELD. It will be honored unless the Management
@@ -113,36 +104,26 @@ spec:
                 properties:
                   allocatePrefixLen:
                     description: Set the parameter's value > 0 to allocate next available
-                      network with corresponding prefix length from the network container
-                      defined by 'parent_cidr'
+                      network container with corresponding prefix length from the
+                      network container defined by 'parent_cidr'
                     type: number
                   cidr:
-                    description: The network block in cidr format.
+                    description: The network container's address, in CIDR format.
                     type: string
                   comment:
-                    description: A string describing the network
+                    description: A description of the network container.
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of the Network
-                    type: string
-                  gateway:
-                    description: Gateway's IP address of the network. By default,
-                      the first IP address is set as gateway address; if the value
-                      is 'none' then the network has no gateway.
+                    description: The Extensible attributes of the network container
+                      to be added/updated, as a map in JSON format
                     type: string
                   networkView:
-                    description: Network view name available in NIOS Server.
+                    description: The name of network view for the network container.
                     type: string
                   parentCidr:
-                    description: The parent network container block in cidr format
+                    description: The parent network container block in CIDR format
                       to allocate from.
                     type: string
-                  reserveIp:
-                    description: The number of IP's you want to reserve in IPv4 Network.
-                    type: number
-                  reserveIpv6:
-                    description: The number of IP's you want to reserve in IPv6 Network
-                    type: number
                 type: object
               managementPolicies:
                 default:
@@ -305,44 +286,34 @@ spec:
             - forProvider
             type: object
           status:
-            description: NetworkStatus defines the observed state of Network.
+            description: NetworkContainerStatus defines the observed state of NetworkContainer.
             properties:
               atProvider:
                 properties:
                   allocatePrefixLen:
                     description: Set the parameter's value > 0 to allocate next available
-                      network with corresponding prefix length from the network container
-                      defined by 'parent_cidr'
+                      network container with corresponding prefix length from the
+                      network container defined by 'parent_cidr'
                     type: number
                   cidr:
-                    description: The network block in cidr format.
+                    description: The network container's address, in CIDR format.
                     type: string
                   comment:
-                    description: A string describing the network
+                    description: A description of the network container.
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of the Network
-                    type: string
-                  gateway:
-                    description: Gateway's IP address of the network. By default,
-                      the first IP address is set as gateway address; if the value
-                      is 'none' then the network has no gateway.
+                    description: The Extensible attributes of the network container
+                      to be added/updated, as a map in JSON format
                     type: string
                   id:
                     type: string
                   networkView:
-                    description: Network view name available in NIOS Server.
+                    description: The name of network view for the network container.
                     type: string
                   parentCidr:
-                    description: The parent network container block in cidr format
+                    description: The parent network container block in CIDR format
                       to allocate from.
                     type: string
-                  reserveIp:
-                    description: The number of IP's you want to reserve in IPv4 Network.
-                    type: number
-                  reserveIpv6:
-                    description: The number of IP's you want to reserve in IPv6 Network
-                    type: number
                 type: object
               conditions:
                 description: Conditions of the resource.

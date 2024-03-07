@@ -4,18 +4,18 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-  name: records.a.upbound.io
+  name: networkcontainers.ipv4.infoblox.upbound.io
 spec:
-  group: a.upbound.io
+  group: ipv4.infoblox.upbound.io
   names:
     categories:
     - crossplane
     - managed
     - infoblox
-    kind: Record
-    listKind: RecordList
-    plural: records
-    singular: record
+    kind: NetworkContainer
+    listKind: NetworkContainerList
+    plural: networkcontainers
+    singular: networkcontainer
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,7 +34,8 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Record is the Schema for the Records API. <no value>
+        description: NetworkContainer is the Schema for the NetworkContainers API.
+          <no value>
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -49,7 +50,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: RecordSpec defines the desired state of Record
+            description: NetworkContainerSpec defines the desired state of NetworkContainer
             properties:
               deletionPolicy:
                 default: Delete
@@ -66,38 +67,28 @@ spec:
                 type: string
               forProvider:
                 properties:
+                  allocatePrefixLen:
+                    description: Set the parameter's value > 0 to allocate next available
+                      network container with corresponding prefix length from the
+                      network container defined by 'parent_cidr'
+                    type: number
                   cidr:
-                    description: Network to allocate an IP address from, when the
-                      'ip_addr' field is empty (dynamic allocation). The address is
-                      in CIDR format. For static allocation, leave this field empty.
+                    description: The network container's address, in CIDR format.
                     type: string
                   comment:
-                    description: Description of the A-record.
-                    type: string
-                  dnsView:
-                    description: DNS view which the zone does exist within.
+                    description: A description of the network container.
                     type: string
                   extAttrs:
-                    description: Extensible attributes of the A-record to be added/updated,
-                      as a map in JSON format
-                    type: string
-                  fqdn:
-                    description: FQDN for the A-record.
-                    type: string
-                  ipAddr:
-                    description: IP address to associate with the A-record. For static
-                      allocation, set the field with a valid IP address. For dynamic
-                      allocation, leave this field empty and set 'cidr' and 'network_view'
-                      fields.
+                    description: The Extensible attributes of the network container
+                      to be added/updated, as a map in JSON format
                     type: string
                   networkView:
-                    description: Network view to use when allocating an IP address
-                      from a network dynamically. For static allocation, leave this
-                      field empty.
+                    description: The name of network view for the network container.
                     type: string
-                  ttl:
-                    description: TTL value for the A-record.
-                    type: number
+                  parentCidr:
+                    description: The parent network container block in CIDR format
+                      to allocate from.
+                    type: string
                 type: object
               initProvider:
                 description: THIS IS A BETA FIELD. It will be honored unless the Management
@@ -111,38 +102,28 @@ spec:
                   for example because of an external controller is managing them,
                   like an autoscaler.
                 properties:
+                  allocatePrefixLen:
+                    description: Set the parameter's value > 0 to allocate next available
+                      network container with corresponding prefix length from the
+                      network container defined by 'parent_cidr'
+                    type: number
                   cidr:
-                    description: Network to allocate an IP address from, when the
-                      'ip_addr' field is empty (dynamic allocation). The address is
-                      in CIDR format. For static allocation, leave this field empty.
+                    description: The network container's address, in CIDR format.
                     type: string
                   comment:
-                    description: Description of the A-record.
-                    type: string
-                  dnsView:
-                    description: DNS view which the zone does exist within.
+                    description: A description of the network container.
                     type: string
                   extAttrs:
-                    description: Extensible attributes of the A-record to be added/updated,
-                      as a map in JSON format
-                    type: string
-                  fqdn:
-                    description: FQDN for the A-record.
-                    type: string
-                  ipAddr:
-                    description: IP address to associate with the A-record. For static
-                      allocation, set the field with a valid IP address. For dynamic
-                      allocation, leave this field empty and set 'cidr' and 'network_view'
-                      fields.
+                    description: The Extensible attributes of the network container
+                      to be added/updated, as a map in JSON format
                     type: string
                   networkView:
-                    description: Network view to use when allocating an IP address
-                      from a network dynamically. For static allocation, leave this
-                      field empty.
+                    description: The name of network view for the network container.
                     type: string
-                  ttl:
-                    description: TTL value for the A-record.
-                    type: number
+                  parentCidr:
+                    description: The parent network container block in CIDR format
+                      to allocate from.
+                    type: string
                 type: object
               managementPolicies:
                 default:
@@ -304,50 +285,35 @@ spec:
             required:
             - forProvider
             type: object
-            x-kubernetes-validations:
-            - message: spec.forProvider.fqdn is a required parameter
-              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.fqdn)
-                || (has(self.initProvider) && has(self.initProvider.fqdn))'
           status:
-            description: RecordStatus defines the observed state of Record.
+            description: NetworkContainerStatus defines the observed state of NetworkContainer.
             properties:
               atProvider:
                 properties:
+                  allocatePrefixLen:
+                    description: Set the parameter's value > 0 to allocate next available
+                      network container with corresponding prefix length from the
+                      network container defined by 'parent_cidr'
+                    type: number
                   cidr:
-                    description: Network to allocate an IP address from, when the
-                      'ip_addr' field is empty (dynamic allocation). The address is
-                      in CIDR format. For static allocation, leave this field empty.
+                    description: The network container's address, in CIDR format.
                     type: string
                   comment:
-                    description: Description of the A-record.
-                    type: string
-                  dnsView:
-                    description: DNS view which the zone does exist within.
+                    description: A description of the network container.
                     type: string
                   extAttrs:
-                    description: Extensible attributes of the A-record to be added/updated,
-                      as a map in JSON format
-                    type: string
-                  fqdn:
-                    description: FQDN for the A-record.
+                    description: The Extensible attributes of the network container
+                      to be added/updated, as a map in JSON format
                     type: string
                   id:
                     type: string
-                  ipAddr:
-                    description: IP address to associate with the A-record. For static
-                      allocation, set the field with a valid IP address. For dynamic
-                      allocation, leave this field empty and set 'cidr' and 'network_view'
-                      fields.
-                    type: string
                   networkView:
-                    description: Network view to use when allocating an IP address
-                      from a network dynamically. For static allocation, leave this
-                      field empty.
+                    description: The name of network view for the network container.
                     type: string
-                  ttl:
-                    description: TTL value for the A-record.
-                    type: number
+                  parentCidr:
+                    description: The parent network container block in CIDR format
+                      to allocate from.
+                    type: string
                 type: object
               conditions:
                 description: Conditions of the resource.

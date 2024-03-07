@@ -4,18 +4,18 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-  name: networks.ipv6.upbound.io
+  name: records.srv.infoblox.upbound.io
 spec:
-  group: ipv6.upbound.io
+  group: srv.infoblox.upbound.io
   names:
     categories:
     - crossplane
     - managed
     - infoblox
-    kind: Network
-    listKind: NetworkList
-    plural: networks
-    singular: network
+    kind: Record
+    listKind: RecordList
+    plural: records
+    singular: record
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,7 +34,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Network is the Schema for the Networks API. <no value>
+        description: Record is the Schema for the Records API. <no value>
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -49,7 +49,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: NetworkSpec defines the desired state of Network
+            description: RecordSpec defines the desired state of Record
             properties:
               deletionPolicy:
                 default: Delete
@@ -66,37 +66,35 @@ spec:
                 type: string
               forProvider:
                 properties:
-                  allocatePrefixLen:
-                    description: Set the parameter's value > 0 to allocate next available
-                      network with corresponding prefix length from the network container
-                      defined by 'parent_cidr'
-                    type: number
-                  cidr:
-                    description: The network block in cidr format.
-                    type: string
                   comment:
-                    description: A string describing the network
+                    description: Description of the SRV-record
+                    type: string
+                  dnsView:
+                    description: DNS view which the zone does exist within
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of the Network
+                    description: Extensible attributes of the SRV-record to be added/updated,
+                      as a map in JSON format.
                     type: string
-                  gateway:
-                    description: Gateway's IP address of the network. By default,
-                      the first IP address is set as gateway address; if the value
-                      is 'none' then the network has no gateway.
+                  name:
+                    description: Combination of service's name, protocol's name and
+                      zone's name
                     type: string
-                  networkView:
-                    description: Network view name available in NIOS Server.
-                    type: string
-                  parentCidr:
-                    description: The parent network container block in cidr format
-                      to allocate from.
-                    type: string
-                  reserveIp:
-                    description: The number of IP's you want to reserve in IPv4 Network.
+                  port:
+                    description: Configures port number (0..65535) for this SRV-record.
                     type: number
-                  reserveIpv6:
-                    description: The number of IP's you want to reserve in IPv6 Network
+                  priority:
+                    description: Configures the priority (0..65535) for this SRV-record.
+                    type: number
+                  target:
+                    description: Provides service for domain name in the SRV-record.
+                    type: string
+                  ttl:
+                    description: TTL value for the SRV-record.
+                    type: number
+                  weight:
+                    description: Configures weight of the SRV-record, valid values
+                      are 0..65535.
                     type: number
                 type: object
               initProvider:
@@ -111,37 +109,35 @@ spec:
                   for example because of an external controller is managing them,
                   like an autoscaler.
                 properties:
-                  allocatePrefixLen:
-                    description: Set the parameter's value > 0 to allocate next available
-                      network with corresponding prefix length from the network container
-                      defined by 'parent_cidr'
-                    type: number
-                  cidr:
-                    description: The network block in cidr format.
-                    type: string
                   comment:
-                    description: A string describing the network
+                    description: Description of the SRV-record
+                    type: string
+                  dnsView:
+                    description: DNS view which the zone does exist within
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of the Network
+                    description: Extensible attributes of the SRV-record to be added/updated,
+                      as a map in JSON format.
                     type: string
-                  gateway:
-                    description: Gateway's IP address of the network. By default,
-                      the first IP address is set as gateway address; if the value
-                      is 'none' then the network has no gateway.
+                  name:
+                    description: Combination of service's name, protocol's name and
+                      zone's name
                     type: string
-                  networkView:
-                    description: Network view name available in NIOS Server.
-                    type: string
-                  parentCidr:
-                    description: The parent network container block in cidr format
-                      to allocate from.
-                    type: string
-                  reserveIp:
-                    description: The number of IP's you want to reserve in IPv4 Network.
+                  port:
+                    description: Configures port number (0..65535) for this SRV-record.
                     type: number
-                  reserveIpv6:
-                    description: The number of IP's you want to reserve in IPv6 Network
+                  priority:
+                    description: Configures the priority (0..65535) for this SRV-record.
+                    type: number
+                  target:
+                    description: Provides service for domain name in the SRV-record.
+                    type: string
+                  ttl:
+                    description: TTL value for the SRV-record.
+                    type: number
+                  weight:
+                    description: Configures weight of the SRV-record, valid values
+                      are 0..65535.
                     type: number
                 type: object
               managementPolicies:
@@ -304,44 +300,63 @@ spec:
             required:
             - forProvider
             type: object
+            x-kubernetes-validations:
+            - message: spec.forProvider.name is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.name)
+                || (has(self.initProvider) && has(self.initProvider.name))'
+            - message: spec.forProvider.port is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.port)
+                || (has(self.initProvider) && has(self.initProvider.port))'
+            - message: spec.forProvider.priority is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.priority)
+                || (has(self.initProvider) && has(self.initProvider.priority))'
+            - message: spec.forProvider.target is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.target)
+                || (has(self.initProvider) && has(self.initProvider.target))'
+            - message: spec.forProvider.weight is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.weight)
+                || (has(self.initProvider) && has(self.initProvider.weight))'
           status:
-            description: NetworkStatus defines the observed state of Network.
+            description: RecordStatus defines the observed state of Record.
             properties:
               atProvider:
                 properties:
-                  allocatePrefixLen:
-                    description: Set the parameter's value > 0 to allocate next available
-                      network with corresponding prefix length from the network container
-                      defined by 'parent_cidr'
-                    type: number
-                  cidr:
-                    description: The network block in cidr format.
-                    type: string
                   comment:
-                    description: A string describing the network
+                    description: Description of the SRV-record
+                    type: string
+                  dnsView:
+                    description: DNS view which the zone does exist within
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of the Network
-                    type: string
-                  gateway:
-                    description: Gateway's IP address of the network. By default,
-                      the first IP address is set as gateway address; if the value
-                      is 'none' then the network has no gateway.
+                    description: Extensible attributes of the SRV-record to be added/updated,
+                      as a map in JSON format.
                     type: string
                   id:
                     type: string
-                  networkView:
-                    description: Network view name available in NIOS Server.
+                  name:
+                    description: Combination of service's name, protocol's name and
+                      zone's name
                     type: string
-                  parentCidr:
-                    description: The parent network container block in cidr format
-                      to allocate from.
-                    type: string
-                  reserveIp:
-                    description: The number of IP's you want to reserve in IPv4 Network.
+                  port:
+                    description: Configures port number (0..65535) for this SRV-record.
                     type: number
-                  reserveIpv6:
-                    description: The number of IP's you want to reserve in IPv6 Network
+                  priority:
+                    description: Configures the priority (0..65535) for this SRV-record.
+                    type: number
+                  target:
+                    description: Provides service for domain name in the SRV-record.
+                    type: string
+                  ttl:
+                    description: TTL value for the SRV-record.
+                    type: number
+                  weight:
+                    description: Configures weight of the SRV-record, valid values
+                      are 0..65535.
                     type: number
                 type: object
               conditions:

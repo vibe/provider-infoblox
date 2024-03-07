@@ -4,9 +4,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-  name: records.aaaa.upbound.io
+  name: records.aaaa.infoblox.upbound.io
 spec:
-  group: aaaa.upbound.io
+  group: aaaa.infoblox.upbound.io
   names:
     categories:
     - crossplane

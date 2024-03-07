@@ -4,18 +4,18 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-  name: auths.zone.upbound.io
+  name: allocations.ip.infoblox.upbound.io
 spec:
-  group: zone.upbound.io
+  group: ip.infoblox.upbound.io
   names:
     categories:
     - crossplane
     - managed
     - infoblox
-    kind: Auth
-    listKind: AuthList
-    plural: auths
-    singular: auth
+    kind: Allocation
+    listKind: AllocationList
+    plural: allocations
+    singular: allocation
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,7 +34,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Auth is the Schema for the Auths API. <no value>
+        description: Allocation is the Schema for the Allocations API. <no value>
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -49,7 +49,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: AuthSpec defines the desired state of Auth
+            description: AllocationSpec defines the desired state of Allocation
             properties:
               deletionPolicy:
                 default: Delete
@@ -66,60 +66,53 @@ spec:
                 type: string
               forProvider:
                 properties:
-                  comment:
-                    description: Comment for the zone; maximum 256 characters.
+                  allocatedIpv4Addr:
+                    description: Value which comes from 'ipv4_addr' (if specified)
+                      or from auto-allocation function (using 'ipv4_cidr').
                     type: string
+                  allocatedIpv6Addr:
+                    description: Value which comes from 'ipv6_addr' (if specified)
+                      or from auto-allocation function (using 'ipv6_cidr').
+                    type: string
+                  comment:
+                    description: A description of IP address allocation.
+                    type: string
+                  dnsView:
+                    description: DNS view under which the zone has been created.
+                    type: string
+                  enableDns:
+                    description: flag that defines if the host record is to be used
+                      for DNS purposes.
+                    type: boolean
                   extAttrs:
-                    description: The Extensible attributes of the zone, as a map in
-                      JSON format
+                    description: The extensible attributes for IP address allocation,
+                      as a map in JSON format
                     type: string
                   fqdn:
-                    description: The name of this DNS zone. For a reverse zone, this
-                      is in 'address/cidr' format. For other zones, this is in FQDN
-                      format. This value can be in unicode format. Note that for a
-                      reverse zone, the corresponding zone_format value should be
-                      set.
+                    description: The host name for Host Record in FQDN format.
                     type: string
-                  nsGroup:
-                    description: The name server group that serves DNS for this zone.
+                  ipv4Addr:
+                    description: IPv4 address of cloud instance.Set a valid IP address
+                      for static allocation and leave empty if dynamically allocated.
                     type: string
-                  restartIfNeeded:
-                    description: Restarts the member service.
-                    type: boolean
-                  soaDefaultTtl:
-                    description: The Time to Live (TTL) value of the SOA record of
-                      this zone. This value is the number of seconds that data is
-                      cached.
-                    type: number
-                  soaExpire:
-                    description: This setting defines the amount of time, in seconds,
-                      after which the secondary server stops giving out answers about
-                      the zone because the zone data is too old to be useful. The
-                      default is one week.
-                    type: number
-                  soaNegativeTtl:
-                    description: The negative Time to Live (TTL) value of the SOA
-                      of the zone indicates how long a secondary server can cache
-                      data for 'Does Not Respond' responses.
-                    type: number
-                  soaRefresh:
-                    description: This indicates the interval at which a secondary
-                      server sends a message to the primary server for a zone to check
-                      that its data is current, and retrieve fresh data if it is not.
-                    type: number
-                  soaRetry:
-                    description: This indicates how long a secondary server must wait
-                      before attempting to recontact the primary server after a connection
-                      failure between the two servers occurs.
-                    type: number
-                  view:
-                    description: 'The name of the DNS view in which the zone resides.
-                      Example: ''external'''
+                  ipv4Cidr:
+                    description: The IPv4 cidr from which an IPv4 address will be
+                      allocated.
                     type: string
-                  zoneFormat:
-                    description: 'Determines the format of this zone. Valid values
-                      are: FORWARD, IPV4, IPV6; the default is FORWARD'
+                  ipv6Addr:
+                    description: IPv6 address of cloud instance.Set a valid IP address
+                      for static allocation and leave empty if dynamically allocated.
                     type: string
+                  ipv6Cidr:
+                    description: The IPv6 cidr from which an IPv6 address will be
+                      allocated.
+                    type: string
+                  networkView:
+                    description: network view name on NIOS server.
+                    type: string
+                  ttl:
+                    description: TTL attribute value for the record.
+                    type: number
                 type: object
               initProvider:
                 description: THIS IS A BETA FIELD. It will be honored unless the Management
@@ -133,60 +126,53 @@ spec:
                   for example because of an external controller is managing them,
                   like an autoscaler.
                 properties:
-                  comment:
-                    description: Comment for the zone; maximum 256 characters.
+                  allocatedIpv4Addr:
+                    description: Value which comes from 'ipv4_addr' (if specified)
+                      or from auto-allocation function (using 'ipv4_cidr').
                     type: string
+                  allocatedIpv6Addr:
+                    description: Value which comes from 'ipv6_addr' (if specified)
+                      or from auto-allocation function (using 'ipv6_cidr').
+                    type: string
+                  comment:
+                    description: A description of IP address allocation.
+                    type: string
+                  dnsView:
+                    description: DNS view under which the zone has been created.
+                    type: string
+                  enableDns:
+                    description: flag that defines if the host record is to be used
+                      for DNS purposes.
+                    type: boolean
                   extAttrs:
-                    description: The Extensible attributes of the zone, as a map in
-                      JSON format
+                    description: The extensible attributes for IP address allocation,
+                      as a map in JSON format
                     type: string
                   fqdn:
-                    description: The name of this DNS zone. For a reverse zone, this
-                      is in 'address/cidr' format. For other zones, this is in FQDN
-                      format. This value can be in unicode format. Note that for a
-                      reverse zone, the corresponding zone_format value should be
-                      set.
+                    description: The host name for Host Record in FQDN format.
                     type: string
-                  nsGroup:
-                    description: The name server group that serves DNS for this zone.
+                  ipv4Addr:
+                    description: IPv4 address of cloud instance.Set a valid IP address
+                      for static allocation and leave empty if dynamically allocated.
                     type: string
-                  restartIfNeeded:
-                    description: Restarts the member service.
-                    type: boolean
-                  soaDefaultTtl:
-                    description: The Time to Live (TTL) value of the SOA record of
-                      this zone. This value is the number of seconds that data is
-                      cached.
-                    type: number
-                  soaExpire:
-                    description: This setting defines the amount of time, in seconds,
-                      after which the secondary server stops giving out answers about
-                      the zone because the zone data is too old to be useful. The
-                      default is one week.
-                    type: number
-                  soaNegativeTtl:
-                    description: The negative Time to Live (TTL) value of the SOA
-                      of the zone indicates how long a secondary server can cache
-                      data for 'Does Not Respond' responses.
-                    type: number
-                  soaRefresh:
-                    description: This indicates the interval at which a secondary
-                      server sends a message to the primary server for a zone to check
-                      that its data is current, and retrieve fresh data if it is not.
-                    type: number
-                  soaRetry:
-                    description: This indicates how long a secondary server must wait
-                      before attempting to recontact the primary server after a connection
-                      failure between the two servers occurs.
-                    type: number
-                  view:
-                    description: 'The name of the DNS view in which the zone resides.
-                      Example: ''external'''
+                  ipv4Cidr:
+                    description: The IPv4 cidr from which an IPv4 address will be
+                      allocated.
                     type: string
-                  zoneFormat:
-                    description: 'Determines the format of this zone. Valid values
-                      are: FORWARD, IPV4, IPV6; the default is FORWARD'
+                  ipv6Addr:
+                    description: IPv6 address of cloud instance.Set a valid IP address
+                      for static allocation and leave empty if dynamically allocated.
                     type: string
+                  ipv6Cidr:
+                    description: The IPv6 cidr from which an IPv6 address will be
+                      allocated.
+                    type: string
+                  networkView:
+                    description: network view name on NIOS server.
+                    type: string
+                  ttl:
+                    description: TTL attribute value for the record.
+                    type: number
                 type: object
               managementPolicies:
                 default:
@@ -354,66 +340,64 @@ spec:
                 || ''Update'' in self.managementPolicies) || has(self.forProvider.fqdn)
                 || (has(self.initProvider) && has(self.initProvider.fqdn))'
           status:
-            description: AuthStatus defines the observed state of Auth.
+            description: AllocationStatus defines the observed state of Allocation.
             properties:
               atProvider:
                 properties:
-                  comment:
-                    description: Comment for the zone; maximum 256 characters.
+                  allocatedIpv4Addr:
+                    description: Value which comes from 'ipv4_addr' (if specified)
+                      or from auto-allocation function (using 'ipv4_cidr').
                     type: string
+                  allocatedIpv6Addr:
+                    description: Value which comes from 'ipv6_addr' (if specified)
+                      or from auto-allocation function (using 'ipv6_cidr').
+                    type: string
+                  comment:
+                    description: A description of IP address allocation.
+                    type: string
+                  dnsView:
+                    description: DNS view under which the zone has been created.
+                    type: string
+                  enableDns:
+                    description: flag that defines if the host record is to be used
+                      for DNS purposes.
+                    type: boolean
                   extAttrs:
-                    description: The Extensible attributes of the zone, as a map in
-                      JSON format
+                    description: The extensible attributes for IP address allocation,
+                      as a map in JSON format
                     type: string
                   fqdn:
-                    description: The name of this DNS zone. For a reverse zone, this
-                      is in 'address/cidr' format. For other zones, this is in FQDN
-                      format. This value can be in unicode format. Note that for a
-                      reverse zone, the corresponding zone_format value should be
-                      set.
+                    description: The host name for Host Record in FQDN format.
                     type: string
                   id:
                     type: string
-                  nsGroup:
-                    description: The name server group that serves DNS for this zone.
+                  internalId:
                     type: string
-                  restartIfNeeded:
-                    description: Restarts the member service.
-                    type: boolean
-                  soaDefaultTtl:
-                    description: The Time to Live (TTL) value of the SOA record of
-                      this zone. This value is the number of seconds that data is
-                      cached.
-                    type: number
-                  soaExpire:
-                    description: This setting defines the amount of time, in seconds,
-                      after which the secondary server stops giving out answers about
-                      the zone because the zone data is too old to be useful. The
-                      default is one week.
-                    type: number
-                  soaNegativeTtl:
-                    description: The negative Time to Live (TTL) value of the SOA
-                      of the zone indicates how long a secondary server can cache
-                      data for 'Does Not Respond' responses.
-                    type: number
-                  soaRefresh:
-                    description: This indicates the interval at which a secondary
-                      server sends a message to the primary server for a zone to check
-                      that its data is current, and retrieve fresh data if it is not.
-                    type: number
-                  soaRetry:
-                    description: This indicates how long a secondary server must wait
-                      before attempting to recontact the primary server after a connection
-                      failure between the two servers occurs.
-                    type: number
-                  view:
-                    description: 'The name of the DNS view in which the zone resides.
-                      Example: ''external'''
+                  ipv4Addr:
+                    description: IPv4 address of cloud instance.Set a valid IP address
+                      for static allocation and leave empty if dynamically allocated.
                     type: string
-                  zoneFormat:
-                    description: 'Determines the format of this zone. Valid values
-                      are: FORWARD, IPV4, IPV6; the default is FORWARD'
+                  ipv4Cidr:
+                    description: The IPv4 cidr from which an IPv4 address will be
+                      allocated.
                     type: string
+                  ipv6Addr:
+                    description: IPv6 address of cloud instance.Set a valid IP address
+                      for static allocation and leave empty if dynamically allocated.
+                    type: string
+                  ipv6Cidr:
+                    description: The IPv6 cidr from which an IPv6 address will be
+                      allocated.
+                    type: string
+                  networkView:
+                    description: network view name on NIOS server.
+                    type: string
+                  ref:
+                    description: NIOS object's reference, not to be set by a user.
+                    type: string
+                  ttl:
+                    description: TTL attribute value for the record.
+                    type: number
                 type: object
               conditions:
                 description: Conditions of the resource.

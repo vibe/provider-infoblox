@@ -4,18 +4,18 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-  name: records.cname.upbound.io
+  name: networks.ipv6.infoblox.upbound.io
 spec:
-  group: cname.upbound.io
+  group: ipv6.infoblox.upbound.io
   names:
     categories:
     - crossplane
     - managed
     - infoblox
-    kind: Record
-    listKind: RecordList
-    plural: records
-    singular: record
+    kind: Network
+    listKind: NetworkList
+    plural: networks
+    singular: network
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,7 +34,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Record is the Schema for the Records API. <no value>
+        description: Network is the Schema for the Networks API. <no value>
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -49,7 +49,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: RecordSpec defines the desired state of Record
+            description: NetworkSpec defines the desired state of Network
             properties:
               deletionPolicy:
                 default: Delete
@@ -66,24 +66,37 @@ spec:
                 type: string
               forProvider:
                 properties:
-                  alias:
-                    description: The alias name in FQDN format.
-                    type: string
-                  canonical:
-                    description: The Canonical name in FQDN format.
+                  allocatePrefixLen:
+                    description: Set the parameter's value > 0 to allocate next available
+                      network with corresponding prefix length from the network container
+                      defined by 'parent_cidr'
+                    type: number
+                  cidr:
+                    description: The network block in cidr format.
                     type: string
                   comment:
-                    description: A description about CNAME record.
-                    type: string
-                  dnsView:
-                    description: Dns View under which the zone has been created.
+                    description: A string describing the network
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of CNAME record, as a map
-                      in JSON format
+                    description: The Extensible attributes of the Network
                     type: string
-                  ttl:
-                    description: TTL attribute value for the record.
+                  gateway:
+                    description: Gateway's IP address of the network. By default,
+                      the first IP address is set as gateway address; if the value
+                      is 'none' then the network has no gateway.
+                    type: string
+                  networkView:
+                    description: Network view name available in NIOS Server.
+                    type: string
+                  parentCidr:
+                    description: The parent network container block in cidr format
+                      to allocate from.
+                    type: string
+                  reserveIp:
+                    description: The number of IP's you want to reserve in IPv4 Network.
+                    type: number
+                  reserveIpv6:
+                    description: The number of IP's you want to reserve in IPv6 Network
                     type: number
                 type: object
               initProvider:
@@ -98,24 +111,37 @@ spec:
                   for example because of an external controller is managing them,
                   like an autoscaler.
                 properties:
-                  alias:
-                    description: The alias name in FQDN format.
-                    type: string
-                  canonical:
-                    description: The Canonical name in FQDN format.
+                  allocatePrefixLen:
+                    description: Set the parameter's value > 0 to allocate next available
+                      network with corresponding prefix length from the network container
+                      defined by 'parent_cidr'
+                    type: number
+                  cidr:
+                    description: The network block in cidr format.
                     type: string
                   comment:
-                    description: A description about CNAME record.
-                    type: string
-                  dnsView:
-                    description: Dns View under which the zone has been created.
+                    description: A string describing the network
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of CNAME record, as a map
-                      in JSON format
+                    description: The Extensible attributes of the Network
                     type: string
-                  ttl:
-                    description: TTL attribute value for the record.
+                  gateway:
+                    description: Gateway's IP address of the network. By default,
+                      the first IP address is set as gateway address; if the value
+                      is 'none' then the network has no gateway.
+                    type: string
+                  networkView:
+                    description: Network view name available in NIOS Server.
+                    type: string
+                  parentCidr:
+                    description: The parent network container block in cidr format
+                      to allocate from.
+                    type: string
+                  reserveIp:
+                    description: The number of IP's you want to reserve in IPv4 Network.
+                    type: number
+                  reserveIpv6:
+                    description: The number of IP's you want to reserve in IPv6 Network
                     type: number
                 type: object
               managementPolicies:
@@ -278,40 +304,44 @@ spec:
             required:
             - forProvider
             type: object
-            x-kubernetes-validations:
-            - message: spec.forProvider.alias is a required parameter
-              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.alias)
-                || (has(self.initProvider) && has(self.initProvider.alias))'
-            - message: spec.forProvider.canonical is a required parameter
-              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.canonical)
-                || (has(self.initProvider) && has(self.initProvider.canonical))'
           status:
-            description: RecordStatus defines the observed state of Record.
+            description: NetworkStatus defines the observed state of Network.
             properties:
               atProvider:
                 properties:
-                  alias:
-                    description: The alias name in FQDN format.
-                    type: string
-                  canonical:
-                    description: The Canonical name in FQDN format.
+                  allocatePrefixLen:
+                    description: Set the parameter's value > 0 to allocate next available
+                      network with corresponding prefix length from the network container
+                      defined by 'parent_cidr'
+                    type: number
+                  cidr:
+                    description: The network block in cidr format.
                     type: string
                   comment:
-                    description: A description about CNAME record.
-                    type: string
-                  dnsView:
-                    description: Dns View under which the zone has been created.
+                    description: A string describing the network
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of CNAME record, as a map
-                      in JSON format
+                    description: The Extensible attributes of the Network
+                    type: string
+                  gateway:
+                    description: Gateway's IP address of the network. By default,
+                      the first IP address is set as gateway address; if the value
+                      is 'none' then the network has no gateway.
                     type: string
                   id:
                     type: string
-                  ttl:
-                    description: TTL attribute value for the record.
+                  networkView:
+                    description: Network view name available in NIOS Server.
+                    type: string
+                  parentCidr:
+                    description: The parent network container block in cidr format
+                      to allocate from.
+                    type: string
+                  reserveIp:
+                    description: The number of IP's you want to reserve in IPv4 Network.
+                    type: number
+                  reserveIpv6:
+                    description: The number of IP's you want to reserve in IPv6 Network
                     type: number
                 type: object
               conditions:

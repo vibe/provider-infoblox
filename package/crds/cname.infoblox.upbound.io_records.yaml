@@ -4,18 +4,18 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-  name: allocations.ip.upbound.io
+  name: records.cname.infoblox.upbound.io
 spec:
-  group: ip.upbound.io
+  group: cname.infoblox.upbound.io
   names:
     categories:
     - crossplane
     - managed
     - infoblox
-    kind: Allocation
-    listKind: AllocationList
-    plural: allocations
-    singular: allocation
+    kind: Record
+    listKind: RecordList
+    plural: records
+    singular: record
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,7 +34,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Allocation is the Schema for the Allocations API. <no value>
+        description: Record is the Schema for the Records API. <no value>
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -49,7 +49,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: AllocationSpec defines the desired state of Allocation
+            description: RecordSpec defines the desired state of Record
             properties:
               deletionPolicy:
                 default: Delete
@@ -66,49 +66,21 @@ spec:
                 type: string
               forProvider:
                 properties:
-                  allocatedIpv4Addr:
-                    description: Value which comes from 'ipv4_addr' (if specified)
-                      or from auto-allocation function (using 'ipv4_cidr').
+                  alias:
+                    description: The alias name in FQDN format.
                     type: string
-                  allocatedIpv6Addr:
-                    description: Value which comes from 'ipv6_addr' (if specified)
-                      or from auto-allocation function (using 'ipv6_cidr').
+                  canonical:
+                    description: The Canonical name in FQDN format.
                     type: string
                   comment:
-                    description: A description of IP address allocation.
+                    description: A description about CNAME record.
                     type: string
                   dnsView:
-                    description: DNS view under which the zone has been created.
+                    description: Dns View under which the zone has been created.
                     type: string
-                  enableDns:
-                    description: flag that defines if the host record is to be used
-                      for DNS purposes.
-                    type: boolean
                   extAttrs:
-                    description: The extensible attributes for IP address allocation,
-                      as a map in JSON format
-                    type: string
-                  fqdn:
-                    description: The host name for Host Record in FQDN format.
-                    type: string
-                  ipv4Addr:
-                    description: IPv4 address of cloud instance.Set a valid IP address
-                      for static allocation and leave empty if dynamically allocated.
-                    type: string
-                  ipv4Cidr:
-                    description: The IPv4 cidr from which an IPv4 address will be
-                      allocated.
-                    type: string
-                  ipv6Addr:
-                    description: IPv6 address of cloud instance.Set a valid IP address
-                      for static allocation and leave empty if dynamically allocated.
-                    type: string
-                  ipv6Cidr:
-                    description: The IPv6 cidr from which an IPv6 address will be
-                      allocated.
-                    type: string
-                  networkView:
-                    description: network view name on NIOS server.
+                    description: The Extensible attributes of CNAME record, as a map
+                      in JSON format
                     type: string
                   ttl:
                     description: TTL attribute value for the record.
@@ -126,49 +98,21 @@ spec:
                   for example because of an external controller is managing them,
                   like an autoscaler.
                 properties:
-                  allocatedIpv4Addr:
-                    description: Value which comes from 'ipv4_addr' (if specified)
-                      or from auto-allocation function (using 'ipv4_cidr').
+                  alias:
+                    description: The alias name in FQDN format.
                     type: string
-                  allocatedIpv6Addr:
-                    description: Value which comes from 'ipv6_addr' (if specified)
-                      or from auto-allocation function (using 'ipv6_cidr').
+                  canonical:
+                    description: The Canonical name in FQDN format.
                     type: string
                   comment:
-                    description: A description of IP address allocation.
+                    description: A description about CNAME record.
                     type: string
                   dnsView:
-                    description: DNS view under which the zone has been created.
+                    description: Dns View under which the zone has been created.
                     type: string
-                  enableDns:
-                    description: flag that defines if the host record is to be used
-                      for DNS purposes.
-                    type: boolean
                   extAttrs:
-                    description: The extensible attributes for IP address allocation,
-                      as a map in JSON format
-                    type: string
-                  fqdn:
-                    description: The host name for Host Record in FQDN format.
-                    type: string
-                  ipv4Addr:
-                    description: IPv4 address of cloud instance.Set a valid IP address
-                      for static allocation and leave empty if dynamically allocated.
-                    type: string
-                  ipv4Cidr:
-                    description: The IPv4 cidr from which an IPv4 address will be
-                      allocated.
-                    type: string
-                  ipv6Addr:
-                    description: IPv6 address of cloud instance.Set a valid IP address
-                      for static allocation and leave empty if dynamically allocated.
-                    type: string
-                  ipv6Cidr:
-                    description: The IPv6 cidr from which an IPv6 address will be
-                      allocated.
-                    type: string
-                  networkView:
-                    description: network view name on NIOS server.
+                    description: The Extensible attributes of CNAME record, as a map
+                      in JSON format
                     type: string
                   ttl:
                     description: TTL attribute value for the record.
@@ -335,65 +279,36 @@ spec:
             - forProvider
             type: object
             x-kubernetes-validations:
-            - message: spec.forProvider.fqdn is a required parameter
+            - message: spec.forProvider.alias is a required parameter
               rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.fqdn)
-                || (has(self.initProvider) && has(self.initProvider.fqdn))'
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.alias)
+                || (has(self.initProvider) && has(self.initProvider.alias))'
+            - message: spec.forProvider.canonical is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.canonical)
+                || (has(self.initProvider) && has(self.initProvider.canonical))'
           status:
-            description: AllocationStatus defines the observed state of Allocation.
+            description: RecordStatus defines the observed state of Record.
             properties:
               atProvider:
                 properties:
-                  allocatedIpv4Addr:
-                    description: Value which comes from 'ipv4_addr' (if specified)
-                      or from auto-allocation function (using 'ipv4_cidr').
+                  alias:
+                    description: The alias name in FQDN format.
                     type: string
-                  allocatedIpv6Addr:
-                    description: Value which comes from 'ipv6_addr' (if specified)
-                      or from auto-allocation function (using 'ipv6_cidr').
+                  canonical:
+                    description: The Canonical name in FQDN format.
                     type: string
                   comment:
-                    description: A description of IP address allocation.
+                    description: A description about CNAME record.
                     type: string
                   dnsView:
-                    description: DNS view under which the zone has been created.
+                    description: Dns View under which the zone has been created.
                     type: string
-                  enableDns:
-                    description: flag that defines if the host record is to be used
-                      for DNS purposes.
-                    type: boolean
                   extAttrs:
-                    description: The extensible attributes for IP address allocation,
-                      as a map in JSON format
-                    type: string
-                  fqdn:
-                    description: The host name for Host Record in FQDN format.
+                    description: The Extensible attributes of CNAME record, as a map
+                      in JSON format
                     type: string
                   id:
-                    type: string
-                  internalId:
-                    type: string
-                  ipv4Addr:
-                    description: IPv4 address of cloud instance.Set a valid IP address
-                      for static allocation and leave empty if dynamically allocated.
-                    type: string
-                  ipv4Cidr:
-                    description: The IPv4 cidr from which an IPv4 address will be
-                      allocated.
-                    type: string
-                  ipv6Addr:
-                    description: IPv6 address of cloud instance.Set a valid IP address
-                      for static allocation and leave empty if dynamically allocated.
-                    type: string
-                  ipv6Cidr:
-                    description: The IPv6 cidr from which an IPv6 address will be
-                      allocated.
-                    type: string
-                  networkView:
-                    description: network view name on NIOS server.
-                    type: string
-                  ref:
-                    description: NIOS object's reference, not to be set by a user.
                     type: string
                   ttl:
                     description: TTL attribute value for the record.
