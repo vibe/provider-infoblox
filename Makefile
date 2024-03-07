@@ -11,7 +11,8 @@ export TERRAFORM_PROVIDER_REPO := https://github.com/infoblox/terraform-provider
 export TERRAFORM_PROVIDER_DOCS_REPO :=https://github.com/vibe/terraform-provider-infoblox
 export TERRAFORM_PROVIDER_VERSION := 2.5.0
 export TERRAFORM_PROVIDER_DOWNLOAD_NAME := terraform-provider-infoblox
-export TERRAFORM_NATIVE_PROVIDER_BINARY := terraform-provider-infoblox_v1.1.0
+export TERRAFORM_NATIVE_PROVIDER_BINARY := terraform-provider-infoblox_v2.5.0
+export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX ?= https://github.com/infobloxopen/$(TERRAFORM_PROVIDER_DOWNLOAD_NAME)/releases/download/v$(TERRAFORM_PROVIDER_VERSION)
 export TERRAFORM_DOCS_PATH := docs/resources
 
 
