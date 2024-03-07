@@ -14,17 +14,41 @@ package apis
 import (
 	"k8s.io/apimachinery/pkg/runtime"
 
-	v1alpha1 "github.com/upbound/upjet-provider-template/apis/null/v1alpha1"
-	v1alpha1apis "github.com/upbound/upjet-provider-template/apis/v1alpha1"
-	v1beta1 "github.com/upbound/upjet-provider-template/apis/v1beta1"
+	v1alpha1 "github.com/vibe/provider-infoblox/apis/a/v1alpha1"
+	v1alpha1aaaa "github.com/vibe/provider-infoblox/apis/aaaa/v1alpha1"
+	v1alpha1cname "github.com/vibe/provider-infoblox/apis/cname/v1alpha1"
+	v1alpha1dns "github.com/vibe/provider-infoblox/apis/dns/v1alpha1"
+	v1alpha1ip "github.com/vibe/provider-infoblox/apis/ip/v1alpha1"
+	v1alpha1ipv4 "github.com/vibe/provider-infoblox/apis/ipv4/v1alpha1"
+	v1alpha1ipv6 "github.com/vibe/provider-infoblox/apis/ipv6/v1alpha1"
+	v1alpha1mx "github.com/vibe/provider-infoblox/apis/mx/v1alpha1"
+	v1alpha1network "github.com/vibe/provider-infoblox/apis/network/v1alpha1"
+	v1alpha1ptr "github.com/vibe/provider-infoblox/apis/ptr/v1alpha1"
+	v1alpha1srv "github.com/vibe/provider-infoblox/apis/srv/v1alpha1"
+	v1alpha1txt "github.com/vibe/provider-infoblox/apis/txt/v1alpha1"
+	v1alpha1apis "github.com/vibe/provider-infoblox/apis/v1alpha1"
+	v1beta1 "github.com/vibe/provider-infoblox/apis/v1beta1"
+	v1alpha1zone "github.com/vibe/provider-infoblox/apis/zone/v1alpha1"
 )
 
 func init() {
 	// Register the types with the Scheme so the components can map objects to GroupVersionKinds and back
 	AddToSchemes = append(AddToSchemes,
 		v1alpha1.SchemeBuilder.AddToScheme,
+		v1alpha1aaaa.SchemeBuilder.AddToScheme,
+		v1alpha1cname.SchemeBuilder.AddToScheme,
+		v1alpha1dns.SchemeBuilder.AddToScheme,
+		v1alpha1ip.SchemeBuilder.AddToScheme,
+		v1alpha1ipv4.SchemeBuilder.AddToScheme,
+		v1alpha1ipv6.SchemeBuilder.AddToScheme,
+		v1alpha1mx.SchemeBuilder.AddToScheme,
+		v1alpha1network.SchemeBuilder.AddToScheme,
+		v1alpha1ptr.SchemeBuilder.AddToScheme,
+		v1alpha1srv.SchemeBuilder.AddToScheme,
+		v1alpha1txt.SchemeBuilder.AddToScheme,
 		v1alpha1apis.SchemeBuilder.AddToScheme,
 		v1beta1.SchemeBuilder.AddToScheme,
+		v1alpha1zone.SchemeBuilder.AddToScheme,
 	)
 }
 
