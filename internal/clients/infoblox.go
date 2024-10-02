@@ -254,6 +254,7 @@ func TerraformSetupBuilder(version, providerSource, providerVersion string) terr
 		}
 
 		ps.Configuration = map[string]any{
+			"server":   server,
 			"ibapauth": finalCookie,
 		}
 		return ps, nil
