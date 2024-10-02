@@ -1,40 +1,236 @@
-name: hashicorp/null
+name: vibe/infoblox
 resources:
-    null_resource:
+    infoblox_a_record Resource - terraform-provider-infoblox:
         subCategory: ""
-        description: The null_resource resource implements the standard resource lifecycle but takes no further action. On Terraform 1.4 and later, use the terraform_data resource type https://developer.hashicorp.com/terraform/language/resources/terraform-data instead. The triggers argument allows specifying an arbitrary set of values that, when changed, will cause the resource to be replaced.
-        name: null_resource
-        title: null_resource Resource - terraform-provider-null
-        examples:
-            - name: cluster
-              manifest: |-
-                {
-                  "connection": [
-                    {
-                      "host": "${element(aws_instance.cluster[*].public_ip, 0)}"
-                    }
-                  ],
-                  "provisioner": {
-                    "remote-exec": [
-                      {
-                        "inline": [
-                          "bootstrap-cluster.sh ${join(\" \",\n      aws_instance.cluster[*].private_ip)}"
-                        ]
-                      }
-                    ]
-                  },
-                  "triggers": {
-                    "cluster_instance_ids": "${join(\",\", aws_instance.cluster[*].id)}"
-                  }
-                }
-              dependencies:
-                aws_instance.cluster: |-
-                    {
-                      "ami": "ami-0dcc1e21636832c5d",
-                      "count": 3,
-                      "instance_type": "m5.large"
-                    }
+        name: infoblox_a_record Resource - terraform-provider-infoblox
+        title: infoblox_a_record Resource - terraform-provider-infoblox
         argumentDocs:
-            id: (String) This is set to a random value at create time.
-            triggers: (Map of String) A map of arbitrary strings that, when changed, will force the null resource to be replaced, re-running any associated provisioners.
+            cidr: (String) Network to allocate an IP address from, when the 'ip_addr' field is empty (dynamic allocation). The address is in CIDR format. For static allocation, leave this field empty.
+            comment: (String) Description of the A-record.
+            dns_view: (String) DNS view which the zone does exist within.
+            ext_attrs: (String) Extensible attributes of the A-record to be added/updated, as a map in JSON format
+            fqdn: (String) FQDN for the A-record.
+            id: (String) The ID of this resource.
+            ip_addr: (String) IP address to associate with the A-record. For static allocation, set the field with a valid IP address. For dynamic allocation, leave this field empty and set 'cidr' and 'network_view' fields.
+            network_view: (String) Network view to use when allocating an IP address from a network dynamically. For static allocation, leave this field empty.
+            ttl: (Number) TTL value for the A-record.
+        importStatements: []
+    infoblox_aaaa_record Resource - terraform-provider-infoblox:
+        subCategory: ""
+        name: infoblox_aaaa_record Resource - terraform-provider-infoblox
+        title: infoblox_aaaa_record Resource - terraform-provider-infoblox
+        argumentDocs:
+            cidr: (String) Network to allocate an IP address from, when the 'ipv6_addr' field is empty (dynamic allocation). The address is in CIDR format. For static allocation, leave this field empty.
+            comment: (String) Description of the AAAA-record.
+            dns_view: (String) DNS view which the zone does exist within.
+            ext_attrs: (String) Extensible attributes of the AAAA-record to be added/updated, as a map in JSON format
+            fqdn: (String) FQDN for the AAAA-record.
+            id: (String) The ID of this resource.
+            ipv6_addr: (String) IP address to associate with the AAAA-record. For static allocation, set the field with a valid IP address. For dynamic allocation, leave this field empty and set 'cidr' and 'network_view' fields.
+            network_view: (String) Network view to use when allocating an IP address from a network dynamically. For static allocation, leave this field empty.
+            ttl: (Number) TTL value for the AAAA-record.
+        importStatements: []
+    infoblox_cname_record Resource - terraform-provider-infoblox:
+        subCategory: ""
+        name: infoblox_cname_record Resource - terraform-provider-infoblox
+        title: infoblox_cname_record Resource - terraform-provider-infoblox
+        argumentDocs:
+            alias: (String) The alias name in FQDN format.
+            canonical: (String) The Canonical name in FQDN format.
+            comment: (String) A description about CNAME record.
+            dns_view: (String) Dns View under which the zone has been created.
+            ext_attrs: (String) The Extensible attributes of CNAME record, as a map in JSON format
+            id: (String) The ID of this resource.
+            ttl: (Number) TTL attribute value for the record.
+        importStatements: []
+    infoblox_dns_view Resource - terraform-provider-infoblox:
+        subCategory: ""
+        name: infoblox_dns_view Resource - terraform-provider-infoblox
+        title: infoblox_dns_view Resource - terraform-provider-infoblox
+        argumentDocs:
+            comment: (String) Comment for the DNS View object; maximum 256 characters.
+            ext_attrs: (String) The Extensible attributes of the DNS view to be added/updated, as a map in JSON format
+            id: (String) The ID of this resource.
+            name: (String) The name of the DNS View to be specified
+            network_view: (String) The name of the Network View in which DNS View exists.
+        importStatements: []
+    infoblox_ip_allocation Resource - terraform-provider-infoblox:
+        subCategory: ""
+        name: infoblox_ip_allocation Resource - terraform-provider-infoblox
+        title: infoblox_ip_allocation Resource - terraform-provider-infoblox
+        argumentDocs:
+            allocated_ipv4_addr: (String) Value which comes from 'ipv4_addr' (if specified) or from auto-allocation function (using 'ipv4_cidr').
+            allocated_ipv6_addr: (String) Value which comes from 'ipv6_addr' (if specified) or from auto-allocation function (using 'ipv6_cidr').
+            comment: (String) A description of IP address allocation.
+            dns_view: (String) DNS view under which the zone has been created.
+            enable_dns: (Boolean) flag that defines if the host record is to be used for DNS purposes.
+            ext_attrs: (String) The extensible attributes for IP address allocation, as a map in JSON format
+            fqdn: (String) The host name for Host Record in FQDN format.
+            id: (String) The ID of this resource.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
+            ipv4_addr: (String) IPv4 address of cloud instance.Set a valid IP address for static allocation and leave empty if dynamically allocated.
+            ipv4_cidr: (String) The IPv4 cidr from which an IPv4 address will be allocated.
+            ipv6_addr: (String) IPv6 address of cloud instance.Set a valid IP address for static allocation and leave empty if dynamically allocated.
+            ipv6_cidr: (String) The IPv6 cidr from which an IPv6 address will be allocated.
+            network_view: (String) network view name on NIOS server.
+            ref: (String) NIOS object's reference, not to be set by a user.
+            ttl: (Number) TTL attribute value for the record.
+        importStatements: []
+    infoblox_ip_association Resource - terraform-provider-infoblox:
+        subCategory: ""
+        name: infoblox_ip_association Resource - terraform-provider-infoblox
+        title: infoblox_ip_association Resource - terraform-provider-infoblox
+        argumentDocs:
+            duid: (String) DHCP unique identifier for IPv6.
+            enable_dhcp: (Boolean) The flag which defines if the host record is to be used for IPAM purposes.
+            id: (String) The ID of this resource.
+            internal_id: (String) This value must point to the ID of the appropriate allocation resource. Required on resource creation.
+            mac_addr: (String) MAC address of a cloud instance.
+            ref: (String) NIOS object's reference, not to be set by a user.
+        importStatements: []
+    infoblox_ipv4_network Resource - terraform-provider-infoblox:
+        subCategory: ""
+        name: infoblox_ipv4_network Resource - terraform-provider-infoblox
+        title: infoblox_ipv4_network Resource - terraform-provider-infoblox
+        argumentDocs:
+            allocate_prefix_len: (Number) Set the parameter's value > 0 to allocate next available network with corresponding prefix length from the network container defined by 'parent_cidr'
+            cidr: (String) The network block in cidr format.
+            comment: (String) A string describing the network
+            ext_attrs: (String) The Extensible attributes of the Network
+            gateway: (String) Gateway's IP address of the network. By default, the first IP address is set as gateway address; if the value is 'none' then the network has no gateway.
+            id: (String) The ID of this resource.
+            network_view: (String) Network view name available in NIOS Server.
+            parent_cidr: (String) The parent network container block in cidr format to allocate from.
+            reserve_ip: (Number) The number of IP's you want to reserve in IPv4 Network.
+            reserve_ipv6: (Number) The number of IP's you want to reserve in IPv6 Network
+        importStatements: []
+    infoblox_ipv4_network_container Resource - terraform-provider-infoblox:
+        subCategory: ""
+        name: infoblox_ipv4_network_container Resource - terraform-provider-infoblox
+        title: infoblox_ipv4_network_container Resource - terraform-provider-infoblox
+        argumentDocs:
+            allocate_prefix_len: (Number) Set the parameter's value > 0 to allocate next available network container with corresponding prefix length from the network container defined by 'parent_cidr'
+            cidr: (String) The network container's address, in CIDR format.
+            comment: (String) A description of the network container.
+            ext_attrs: (String) The Extensible attributes of the network container to be added/updated, as a map in JSON format
+            id: (String) The ID of this resource.
+            network_view: (String) The name of network view for the network container.
+            parent_cidr: (String) The parent network container block in CIDR format to allocate from.
+        importStatements: []
+    infoblox_ipv6_network Resource - terraform-provider-infoblox:
+        subCategory: ""
+        name: infoblox_ipv6_network Resource - terraform-provider-infoblox
+        title: infoblox_ipv6_network Resource - terraform-provider-infoblox
+        argumentDocs:
+            allocate_prefix_len: (Number) Set the parameter's value > 0 to allocate next available network with corresponding prefix length from the network container defined by 'parent_cidr'
+            cidr: (String) The network block in cidr format.
+            comment: (String) A string describing the network
+            ext_attrs: (String) The Extensible attributes of the Network
+            gateway: (String) Gateway's IP address of the network. By default, the first IP address is set as gateway address; if the value is 'none' then the network has no gateway.
+            id: (String) The ID of this resource.
+            network_view: (String) Network view name available in NIOS Server.
+            parent_cidr: (String) The parent network container block in cidr format to allocate from.
+            reserve_ip: (Number) The number of IP's you want to reserve in IPv4 Network.
+            reserve_ipv6: (Number) The number of IP's you want to reserve in IPv6 Network
+        importStatements: []
+    infoblox_ipv6_network_container Resource - terraform-provider-infoblox:
+        subCategory: ""
+        name: infoblox_ipv6_network_container Resource - terraform-provider-infoblox
+        title: infoblox_ipv6_network_container Resource - terraform-provider-infoblox
+        argumentDocs:
+            allocate_prefix_len: (Number) Set the parameter's value > 0 to allocate next available network container with corresponding prefix length from the network container defined by 'parent_cidr'
+            cidr: (String) The network container's address, in CIDR format.
+            comment: (String) A description of the network container.
+            ext_attrs: (String) The Extensible attributes of the network container to be added/updated, as a map in JSON format
+            id: (String) The ID of this resource.
+            network_view: (String) The name of network view for the network container.
+            parent_cidr: (String) The parent network container block in CIDR format to allocate from.
+        importStatements: []
+    infoblox_mx_record Resource - terraform-provider-infoblox:
+        subCategory: ""
+        name: infoblox_mx_record Resource - terraform-provider-infoblox
+        title: infoblox_mx_record Resource - terraform-provider-infoblox
+        argumentDocs:
+            comment: (String) Description of the MX-Record.
+            dns_view: (String) DNS view which the zone does exist within
+            ext_attrs: (String) Extensible attributes of the MX-record to be added/updated, as a map in JSON format.
+            fqdn: (String) FQDN for the MX-record.
+            id: (String) The ID of this resource.
+            mail_exchanger: (String) A record used to specify mail server.
+            preference: (Number) Configures the preference (0-65535) for this MX-record.
+            ttl: (Number) TTL value for the MX-record.
+        importStatements: []
+    infoblox_network_view Resource - terraform-provider-infoblox:
+        subCategory: ""
+        name: infoblox_network_view Resource - terraform-provider-infoblox
+        title: infoblox_network_view Resource - terraform-provider-infoblox
+        argumentDocs:
+            comment: (String) A description of the network view.
+            ext_attrs: (String) The Extensible attributes of the network container to be added/updated, as a map in JSON format
+            id: (String) The ID of this resource.
+            name: (String) Specifies the desired name of the network view as shown in the NIOS appliance. The name has the same requirements as the corresponding parameter in WAPI.
+        importStatements: []
+    infoblox_ptr_record Resource - terraform-provider-infoblox:
+        subCategory: ""
+        name: infoblox_ptr_record Resource - terraform-provider-infoblox
+        title: infoblox_ptr_record Resource - terraform-provider-infoblox
+        argumentDocs:
+            cidr: (String) The network address in cidr format under which record has to be created.
+            comment: (String) A description about PTR record.
+            dns_view: (String) Dns View under which the zone has been created.
+            ext_attrs: (String) The Extensible attributes of PTR record to be added/updated, as a map in JSON format
+            id: (String) The ID of this resource.
+            ip_addr: (String) IPv4/IPv6 address for record creation. Set the field with valid IP for static allocation. If to be dynamically allocated set cidr field
+            network_view: (String) Network view name of NIOS server.
+            ptrdname: (String) The domain name in FQDN to which the record should point to.
+            record_name: (String) The name of the DNS PTR record in FQDN format
+            ttl: (Number) TTL attribute value for the record.
+        importStatements: []
+    infoblox_srv_record Resource - terraform-provider-infoblox:
+        subCategory: ""
+        name: infoblox_srv_record Resource - terraform-provider-infoblox
+        title: infoblox_srv_record Resource - terraform-provider-infoblox
+        argumentDocs:
+            comment: (String) Description of the SRV-record
+            dns_view: (String) DNS view which the zone does exist within
+            ext_attrs: (String) Extensible attributes of the SRV-record to be added/updated, as a map in JSON format.
+            id: (String) The ID of this resource.
+            name: (String) Combination of service's name, protocol's name and zone's name
+            port: (Number) Configures port number (0..65535) for this SRV-record.
+            priority: (Number) Configures the priority (0..65535) for this SRV-record.
+            target: (String) Provides service for domain name in the SRV-record.
+            ttl: (Number) TTL value for the SRV-record.
+            weight: (Number) Configures weight of the SRV-record, valid values are 0..65535.
+        importStatements: []
+    infoblox_txt_record Resource - terraform-provider-infoblox:
+        subCategory: ""
+        name: infoblox_txt_record Resource - terraform-provider-infoblox
+        title: infoblox_txt_record Resource - terraform-provider-infoblox
+        argumentDocs:
+            comment: (String) Description of the TXT-record.
+            dns_view: (String) DNS view in which the record's zone exists.
+            ext_attrs: (String) Extensible attributes of the TXT-record to be added/updated, as a map in JSON format
+            fqdn: (String) FQDN for the TXT-Record.
+            id: (String) The ID of this resource.
+            text: (String) Data to be associated with TXT_Record.
+            ttl: (Number) TTL value of the TXT-Record
+        importStatements: []
+    infoblox_zone_auth Resource - terraform-provider-infoblox:
+        subCategory: ""
+        name: infoblox_zone_auth Resource - terraform-provider-infoblox
+        title: infoblox_zone_auth Resource - terraform-provider-infoblox
+        argumentDocs:
+            comment: (String) Comment for the zone; maximum 256 characters.
+            ext_attrs: (String) The Extensible attributes of the zone, as a map in JSON format
+            fqdn: (String) The name of this DNS zone. For a reverse zone, this is in 'address/cidr' format. For other zones, this is in FQDN format. This value can be in unicode format. Note that for a reverse zone, the corresponding zone_format value should be set.
+            id: (String) The ID of this resource.
+            ns_group: (String) The name server group that serves DNS for this zone.
+            restart_if_needed: (Boolean) Restarts the member service.
+            soa_default_ttl: (Number) The Time to Live (TTL) value of the SOA record of this zone. This value is the number of seconds that data is cached.
+            soa_expire: (Number) This setting defines the amount of time, in seconds, after which the secondary server stops giving out answers about the zone because the zone data is too old to be useful. The default is one week.
+            soa_negative_ttl: (Number) The negative Time to Live (TTL) value of the SOA of the zone indicates how long a secondary server can cache data for 'Does Not Respond' responses.
+            soa_refresh: (Number) This indicates the interval at which a secondary server sends a message to the primary server for a zone to check that its data is current, and retrieve fresh data if it is not.
+            soa_retry: (Number) This indicates how long a secondary server must wait before attempting to recontact the primary server after a connection failure between the two servers occurs.
+            view: '(String) The name of the DNS view in which the zone resides. Example: ''external'''
+            zone_format: '(String) Determines the format of this zone. Valid values are: FORWARD, IPV4, IPV6; the default is FORWARD'
         importStatements: []
